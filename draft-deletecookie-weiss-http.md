@@ -81,6 +81,23 @@ Each token represents a cookie {{COOKIES}} name to be deleted.
 A user agent that receives a Delete-Cookie response header MUST delete cookies for the server's registrable domain with corresponding names from its cookie store.
 Each name could match multiple cookies of that same name, set on different paths.
 
+## Example
+
+MegaCorp servers receive a request from a client with the following header:
+
+~~~ http-message
+Cookie: foo=bar, fizz=baz
+~~~
+
+The server operators know that cookies named "foo" and "fizz" are no longer meaningful for their service, and are unaware when and how those cookies were set.
+In order to clear that user's cookie store, they send the following header:
+
+~~~ http-message
+Delete-Cookie: foo, fizz
+~~~
+
+That clears the client's cookie store of "foo" and "fizz" and ensures that these cookies won't be sent again.
+
 # Security Considerations
 
 The Delete-Cookie header enables servers to delete cookies from user agents on their own registrable domains.
