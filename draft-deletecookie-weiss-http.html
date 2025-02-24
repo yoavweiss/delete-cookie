@@ -1214,7 +1214,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-delete-cookie" class="section-name selfRef">Delete-Cookie</a>
       </h2>
 <p id="section-2-1">The Delete-Cookie response header is a Structured Field <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> List of tokens.
-Each token represents a cookie name to be deleted.<a href="#section-2-1" class="pilcrow">¶</a></p>
+Each token represents a cookie <span>[<a href="#COOKIES" class="cite xref">COOKIES</a>]</span> name to be deleted.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">A user agent that receives a Delete-Cookie response header <span class="bcp14">MUST</span> delete cookies for the server's registrable domain with corresponding names from its cookie store.
 Each name could match multiple cookies of that same name, set on different paths.<a href="#section-2-2" class="pilcrow">¶</a></p>
 </section>
@@ -1271,6 +1271,10 @@ to the table below:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
+<dt id="COOKIES">[COOKIES]</dt>
+      <dd>
+<span class="refTitle">"Cookies HTTP State Management Mechanism"</span>, <time datetime="2025-02" class="refDate">February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/">https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
       <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>

@@ -108,7 +108,7 @@ Table of Contents
 
    The Delete-Cookie response header is a Structured Field
    [STRUCTURED-FIELDS] List of tokens.  Each token represents a cookie
-   name to be deleted.
+   [COOKIES] name to be deleted.
 
    A user agent that receives a Delete-Cookie response header MUST
    delete cookies for the server's registrable domain with corresponding
@@ -143,6 +143,10 @@ Table of Contents
                                  Table 1
 
 5.  Normative References
+
+   [COOKIES]  "Cookies HTTP State Management Mechanism", February 2025,
+              <https://datatracker.ietf.org/doc/draft-ietf-httpbis-
+              rfc6265bis/>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
