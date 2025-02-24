@@ -29,6 +29,10 @@ author:
     organization: Shopify
     email: yoav@yoav.ws
 normative:
+  STRUCTURED-FIELDS:
+    title: Structured Field Values for HTTP
+    date: 1 May 2024
+    target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-sfbis/
 
 informative:
 
@@ -42,12 +46,12 @@ without requiring the server to know more details about them.
 
 # Introduction
 
-Long-operating web sites can often find themselves dealing with "cookie cruft" - 
+Long-operating web sites can often find themselves dealing with "cookie cruft" -
 cookies that no longer have backend logic that corresponds with them.
 
 Such cookies may have been set at some point in the past with
 far-reaching expiration dates, and are now causing useless cookie bloat at
-best, or using up quotas at the expense of relevant cookies at worst 
+best, or using up quotas at the expense of relevant cookies at worst
 
 Deleting cookies is possible today by setting their expiry date to one in the past,
 but that requires one to know the "domain" and "path" parameters with which the cookies were set.
@@ -91,7 +95,7 @@ to the table below:
 |----------------------|-----------|-------------------------------------------|
 | Field Name           | Status    |                 Reference                 |
 |----------------------|-----------|-------------------------------------------|
-| Delete-Cookie        | permanent | {{Delete-Cookie}} of this document        |
+| Delete-Cookie        | permanent | {{delete-cookie}} of this document        |
 |----------------------|-----------|-------------------------------------------|
 
 
