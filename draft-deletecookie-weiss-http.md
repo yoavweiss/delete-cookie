@@ -34,6 +34,11 @@ normative:
     date: 1 May 2024
     target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-sfbis/
 
+  COOKIES:
+    title: Cookies HTTP State Management Mechanism
+    date: 20 February 2025
+    target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/
+
 informative:
 
 
@@ -71,7 +76,7 @@ This document uses the following terminology from Section 3 of {{STRUCTURED-FIEL
 # Delete-Cookie
 
 The Delete-Cookie response header is a Structured Field {{STRUCTURED-FIELDS}} List of tokens.
-Each token represents a cookie name to be deleted.
+Each token represents a cookie {{COOKIES}} name to be deleted.
 
 A user agent that receives a Delete-Cookie response header MUST delete cookies for the server's registrable domain with corresponding names from its cookie store.
 Each name could match multiple cookies of that same name, set on different paths.
