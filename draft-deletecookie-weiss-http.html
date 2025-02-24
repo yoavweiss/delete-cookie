@@ -1153,7 +1153,12 @@ without requiring the server to know more details about them.<a href="#section-a
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-delete-cookie" class="internal xref">Delete-Cookie</a></p>
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-delete-cookie" class="internal xref">Delete-Cookie</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-example" class="internal xref">Example</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
@@ -1217,6 +1222,27 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 Each token represents a cookie <span>[<a href="#COOKIES" class="cite xref">COOKIES</a>]</span> name to be deleted.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">A user agent that receives a Delete-Cookie response header <span class="bcp14">MUST</span> delete cookies for the server's registrable domain with corresponding names from its cookie store.
 Each name could match multiple cookies of that same name, set on different paths.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<div id="example">
+<section id="section-2.1">
+        <h3 id="name-example">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-example" class="section-name selfRef">Example</a>
+        </h3>
+<p id="section-2.1-1">MegaCorp servers receive a request from a client with the following header:<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-2.1-2">
+<pre>
+Cookie: foo=bar, fizz=baz
+</pre><a href="#section-2.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-2.1-3">The server operators know that cookies named "foo" and "fizz" are no longer meaningful for their service, and are unaware when and how those cookies were set.
+In order to clear that user's cookie store, they send the following header:<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-2.1-4">
+<pre>
+Delete-Cookie: foo, fizz
+</pre><a href="#section-2.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-2.1-5">That clears the client's cookie store of "foo" and "fizz" and ensures that these cookies won't be sent again.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="security-considerations">
