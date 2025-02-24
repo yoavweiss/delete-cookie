@@ -19,12 +19,12 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "Delete-Cookie"
+abbrev: "DelCookie"
 category: info
 
-docname: draft-todo-yourname-protocol-latest
-submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
+docname: draft-deletecookie-weiss-http-latest
+submissiontype: IETF
 number:
 date:
 consensus: true
@@ -45,10 +45,9 @@ venue:
 
 author:
  -
-    fullname: Your Name Here
-    organization: Your Organization Here
-    email: your.email@example.com
-
+    fullname: Yoav Weiss
+    organization: Shopify
+    email: yoav@yoav.ws
 normative:
 
 informative:
