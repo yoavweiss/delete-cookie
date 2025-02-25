@@ -1,0 +1,131 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2025-02-25T00:32:13.845196+00:00",
+  "repo": "yoavweiss/delete-cookie",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDON-fYzM6rUP9B",
+      "title": "need to cite the cookie spec",
+      "url": "https://github.com/yoavweiss/delete-cookie/issues/1",
+      "state": "CLOSED",
+      "author": "reschke",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "(I assume)",
+      "createdAt": "2025-02-24T08:40:49Z",
+      "updatedAt": "2025-02-24T09:41:29Z",
+      "closedAt": "2025-02-24T09:41:25Z",
+      "comments": [
+        {
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "body": "Thanks! Closed by https://github.com/yoavweiss/delete-cookie/commit/189759333245a638fe866d8abb2511c73e90b636 (I think - but let me know if there are other places where a reference could be useful)",
+          "createdAt": "2025-02-24T09:41:25Z",
+          "updatedAt": "2025-02-24T09:41:25Z"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "I_kwDON-fYzM6rUaTq",
+      "title": "Extend introduction to include `partitioned` attribute",
+      "url": "https://github.com/yoavweiss/delete-cookie/issues/2",
+      "state": "OPEN",
+      "author": "tunetheweb",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I wonder if the intro should be extended to include `partitioned` attribute? That's another one we've seen confusion with as sites migrate from non-partitioned to partitioned cookies.\n\nSee also: https://developers.google.com/privacy-sandbox/cookies/chips-transition",
+      "createdAt": "2025-02-24T08:58:31Z",
+      "updatedAt": "2025-02-24T14:42:54Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "body": "Can you expand on that? Do you want servers to be able to delete partitioned cookies specifically?\n\nAs defined, both partitioned and non-partitioned cookies of a certain name will be deleted. Is that not desired for some reason?",
+          "createdAt": "2025-02-24T09:33:20Z",
+          "updatedAt": "2025-02-24T09:33:20Z"
+        },
+        {
+          "author": "tunetheweb",
+          "authorAssociation": "NONE",
+          "body": "This text doesn\u2019t mention this attribute:\n\n> Deleting cookies is possible today by setting their expiry date to one in the past, but that requires one to know the \"domain\" and \"path\" parameters with which the cookies were set. That is not something that can be passively observed on the server side by default.[\u00b6](https://yoavweiss.github.io/delete-cookie/draft-deletecookie-weiss-http.html#section-1-3)\n\nSo I wanted to 1) confirm that was the case (both cookies would be deleted and not just the first matching one) and 2) thought it was another use case to help you push the need for this.",
+          "createdAt": "2025-02-24T09:57:31Z",
+          "updatedAt": "2025-02-24T09:57:31Z"
+        },
+        {
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "body": "Oh, does the server also needs to know the \"partitioned\" attribute in order to delete a cookie today? I was not aware of that",
+          "createdAt": "2025-02-24T09:58:55Z",
+          "updatedAt": "2025-02-24T09:58:55Z"
+        },
+        {
+          "author": "tunetheweb",
+          "authorAssociation": "NONE",
+          "body": "As per above link I think it does need to know to set the appropriate `max-age` to delete it, and also to avoid creating a duplicated cookie (which is easy to do and complicates matters no end!).\n\nBut I\u2019m not an expert on this and only worked on it very briefly. So maybe I should tag in the likes of @samdutton, @krgovind and @johannhof. It seems to me this proposal could prove useful to help manage partitioned cookies easier (whether as part of a shorter term migration or even in long term beyond that).",
+          "createdAt": "2025-02-24T10:18:00Z",
+          "updatedAt": "2025-02-24T14:42:54Z"
+        },
+        {
+          "author": "krgovind",
+          "authorAssociation": "NONE",
+          "body": "cc @dcthetall @aselya as well.\n\n> Oh, does the server also needs to know the \"partitioned\" attribute in order to delete a cookie today? I was not aware of that\n\nYes, @tunetheweb is right, the server would need to know to add the Partitioned attribute to delete the cookie correctly.",
+          "createdAt": "2025-02-24T14:41:31Z",
+          "updatedAt": "2025-02-24T14:41:31Z"
+        }
+      ]
+    }
+  ],
+  "pulls": []
+}
