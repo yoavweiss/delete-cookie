@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-25T00:32:13.845196+00:00",
+  "timestamp": "2025-02-27T00:30:03.830632+00:00",
   "repo": "yoavweiss/delete-cookie",
   "labels": [
     {
@@ -86,7 +86,7 @@
       "labels": [],
       "body": "I wonder if the intro should be extended to include `partitioned` attribute? That's another one we've seen confusion with as sites migrate from non-partitioned to partitioned cookies.\n\nSee also: https://developers.google.com/privacy-sandbox/cookies/chips-transition",
       "createdAt": "2025-02-24T08:58:31Z",
-      "updatedAt": "2025-02-24T14:42:54Z",
+      "updatedAt": "2025-02-25T19:28:15Z",
       "closedAt": null,
       "comments": [
         {
@@ -123,6 +123,20 @@
           "body": "cc @dcthetall @aselya as well.\n\n> Oh, does the server also needs to know the \"partitioned\" attribute in order to delete a cookie today? I was not aware of that\n\nYes, @tunetheweb is right, the server would need to know to add the Partitioned attribute to delete the cookie correctly.",
           "createdAt": "2025-02-24T14:41:31Z",
           "updatedAt": "2025-02-24T14:41:31Z"
+        },
+        {
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "body": " I was looking to where `partitioned` is defined and found https://datatracker.ietf.org/doc/draft-cutler-httpbis-partitioned-cookies/ which seems to have expired. Are there plans to bring `partitioned` to a standards venue?",
+          "createdAt": "2025-02-25T12:33:06Z",
+          "updatedAt": "2025-02-25T12:33:06Z"
+        },
+        {
+          "author": "johannhof",
+          "authorAssociation": "NONE",
+          "body": "> I was looking to where `partitioned` is defined and found https://datatracker.ietf.org/doc/draft-cutler-httpbis-partitioned-cookies/ which seems to have expired. Are there plans to bring `partitioned` to a standards venue?\n\nYes, that's one thing our [proposed 6265bis successor](https://github.com/johannhof/draft-annevk-johannhof-httpbis-cookies) is intended to bring to the Cookies spec (it actually doesn't mention partitioned cookies right now but that's being worked on by @dcthetall).\n\n> Yes, @tunetheweb is right, the server would need to know to add the Partitioned attribute to delete the cookie correctly.\n\n+1 on that requirement, though I'll read this proposal in more detail before I can comment on what the implications on it are :)",
+          "createdAt": "2025-02-25T19:28:14Z",
+          "updatedAt": "2025-02-25T19:28:14Z"
         }
       ]
     }
