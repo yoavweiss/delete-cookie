@@ -66,17 +66,16 @@ This draft proposes a new `Delete-Cookie` header which will enable servers to in
 to delete cookies of a certain name from their cookie stores.
 
 
-
 ## Notational Conventions
 
 {::boilerplate bcp14-tagged}
 
-This document uses the following terminology from Section 3 of {{STRUCTURED-FIELDS}} to specify syntax and parsing: Lists, tokens.
+This document uses the following terminology from Section 3 of {{STRUCTURED-FIELDS}} to specify syntax and parsing: Lists, strings.
 
 # Delete-Cookie
 
-The Delete-Cookie response header is a Structured Field {{STRUCTURED-FIELDS}} List of tokens.
-Each token represents a cookie {{COOKIES}} name to be deleted.
+The Delete-Cookie response header is a Structured Field {{STRUCTURED-FIELDS}} List of strings.
+Each string represents a cookie {{COOKIES}} name to be deleted.
 
 A user agent that receives a Delete-Cookie response header MUST delete cookies for the server's registrable domain with corresponding names from its cookie store.
 Each name could match multiple cookies of that same name, set on different paths.
@@ -93,7 +92,7 @@ The server operators know that cookies named "foo" and "fizz" are no longer mean
 In order to clear that user's cookie store, they send the following header:
 
 ~~~ http-message
-Delete-Cookie: foo, fizz
+Delete-Cookie: "foo", "fizz"
 ~~~
 
 That clears the client's cookie store of "foo" and "fizz" and ensures that these cookies won't be sent again.
@@ -103,7 +102,6 @@ That clears the client's cookie store of "foo" and "fizz" and ensures that these
 The Delete-Cookie header enables servers to delete cookies from user agents on their own registrable domains.
 These servers could have already deleted these same cookies by setting cookies with identical name, path and domain with an expiration date of 0.
 As such the header does not provide servers any new capabilities, beyond the convenience of not having to know the path and domain of a cookie in order to delete it.
-
 
 # IANA Considerations
 
@@ -126,4 +124,4 @@ to the table below:
 # Acknowledgments
 {:numbered="false"}
 
-Thanks to Anne van Kesteren and Pat Meenan on their feedback on early versions of this proposal.
+Thanks to Anne van Kesteren and Pat Meenan for their feedback on early versions of this proposal.
