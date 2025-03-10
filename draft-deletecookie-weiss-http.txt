@@ -4,8 +4,8 @@
 
 Network Working Group                                           Y. Weiss
 Internet-Draft                                                   Shopify
-Intended status: Informational                          24 February 2025
-Expires: 28 August 2025
+Intended status: Informational                             10 March 2025
+Expires: 11 September 2025
 
 
                              Delete-Cookie
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 August 2025.
+   This Internet-Draft will expire on 11 September 2025.
 
 Copyright Notice
 
@@ -103,12 +103,12 @@ Table of Contents
    capitals, as shown here.
 
    This document uses the following terminology from Section 3 of
-   [STRUCTURED-FIELDS] to specify syntax and parsing: Lists, tokens.
+   [STRUCTURED-FIELDS] to specify syntax and parsing: Lists, strings.
 
 2.  Delete-Cookie
 
    The Delete-Cookie response header is a Structured Field
-   [STRUCTURED-FIELDS] List of tokens.  Each token represents a cookie
+   [STRUCTURED-FIELDS] List of strings.  Each string represents a cookie
    [COOKIES] name to be deleted.
 
    A user agent that receives a Delete-Cookie response header MUST
@@ -128,7 +128,7 @@ Table of Contents
    those cookies were set.  In order to clear that user's cookie store,
    they send the following header:
 
-   Delete-Cookie: foo, fizz
+   Delete-Cookie: "foo", "fizz"
 
    That clears the client's cookie store of "foo" and "fizz" and ensures
    that these cookies won't be sent again.
@@ -182,8 +182,8 @@ Table of Contents
 
 Acknowledgments
 
-   Thanks to Anne van Kesteren and Pat Meenan on their feedback on early
-   versions of this proposal.
+   Thanks to Anne van Kesteren and Pat Meenan for their feedback on
+   early versions of this proposal.
 
 Author's Address
 
