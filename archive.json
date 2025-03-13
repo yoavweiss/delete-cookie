@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-11T00:30:37.469170+00:00",
+  "timestamp": "2025-03-13T00:31:07.656851+00:00",
   "repo": "yoavweiss/delete-cookie",
   "labels": [
     {
@@ -137,6 +137,37 @@
           "body": "> I was looking to where `partitioned` is defined and found https://datatracker.ietf.org/doc/draft-cutler-httpbis-partitioned-cookies/ which seems to have expired. Are there plans to bring `partitioned` to a standards venue?\n\nYes, that's one thing our [proposed 6265bis successor](https://github.com/johannhof/draft-annevk-johannhof-httpbis-cookies) is intended to bring to the Cookies spec (it actually doesn't mention partitioned cookies right now but that's being worked on by @dcthetall).\n\n> Yes, @tunetheweb is right, the server would need to know to add the Partitioned attribute to delete the cookie correctly.\n\n+1 on that requirement, though I'll read this proposal in more detail before I can comment on what the implications on it are :)",
           "createdAt": "2025-02-25T19:28:14Z",
           "updatedAt": "2025-02-25T19:28:14Z"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "I_kwDON-fYzM6tcwVJ",
+      "title": "Scope of deletion.",
+      "url": "https://github.com/yoavweiss/delete-cookie/issues/3",
+      "state": "OPEN",
+      "author": "mikewest",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The current draft requires that \"A user agent that receives a Delete-Cookie response header MUST delete cookies for the server's registrable domain with corresponding names from its cookie store. Each name could match multiple cookies of that same name, set on different paths.\"\n\nThis is a little unclear about the scope of any deletion, and it might be helpful to specify it a little more clearly. Is the intent to remove all cookies that [domain-match](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#name-domain-matching) the server's host? That is, if `sub.example.com` sends the header, would cookies set on `subsub.sub.example.com` be removed?\n\nIf so, it might be reasonable to special-case `__host-` prefixed cookies, as they are otherwise locked to a host in a way distinct from typical domain-matching. If not, it would be helpful to clarify the scope more precisely. :)",
+      "createdAt": "2025-03-11T10:31:11Z",
+      "updatedAt": "2025-03-11T11:50:08Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "body": "> This is a little unclear about the scope of any deletion, and it might be helpful to specify it a little more clearly. Is the intent to remove all cookies that [domain-match](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#name-domain-matching) the server's host? That is, if `sub.example.com` sends the header, would cookies set on `subsub.sub.example.com` be removed?\n\nThe guiding principle I had in mind is: any cookie that the server can get and set, is one it should be able to delete.\n\nSo a cookie set in `subsub.sub.example.com` with a `domain=example.com` attribute that covers can be deleted by `sub.example.com` sending a `Delete-Cookie` header.\n\nIf that makes sense, I can clarify that.\n\n> If so, it might be reasonable to special-case `__host-` prefixed cookies, as they are otherwise locked to a host in a way distinct from typical domain-matching. If not, it would be helpful to clarify the scope more precisely. :)\n\nMakes sense!!",
+          "createdAt": "2025-03-11T11:20:14Z",
+          "updatedAt": "2025-03-11T11:20:26Z"
+        },
+        {
+          "author": "mikewest",
+          "authorAssociation": "NONE",
+          "body": "> > This is a little unclear about the scope of any deletion, and it might be helpful to specify it a little more clearly. Is the intent to remove all cookies that [domain-match](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#name-domain-matching) the server's host? That is, if `sub.example.com` sends the header, would cookies set on `subsub.sub.example.com` be removed?\n> \n> The guiding principle I had in mind is: any cookie that the server can get and set, is one it should be able to delete.\n> \n> So a cookie set in `subsub.sub.example.com` with a `domain=example.com` attribute that covers can be deleted by `sub.example.com` sending a `Delete-Cookie` header.\n\nSo, `sub.example.com` could clear cookies set at `sub.example.com` and `example.com`, but wouldn't clear cookies set at `subsub.sub.example.com`, or host-only cookies (e.g. cookies without a `domain` attribute) set at `example.com`?\n\n> If that makes sense, I can clarify that.\n\nI think it would be helpful to specify the set of cookies this header would act upon for a given response. See step 1 of https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#section-5.8.3 for some example things to consider (prefixes, the `host-only-flag`, the target host, and whether you're acting on exact string matching or domain-matching jump out at me, but there might be other considerations).\n\nIt might also be helpful to specify when this happens in terms of Fetch: does deletion precede or follow processing of the `cookie` header, for example?\n\n",
+          "createdAt": "2025-03-11T11:50:07Z",
+          "updatedAt": "2025-03-11T11:50:07Z"
         }
       ]
     }
