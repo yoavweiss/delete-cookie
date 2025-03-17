@@ -77,8 +77,13 @@ This document uses the following terminology from Section 3 of {{STRUCTURED-FIEL
 The Delete-Cookie response header is a Structured Field {{STRUCTURED-FIELDS}} List of strings.
 Each string represents a cookie {{COOKIES}} name to be deleted.
 
-A user agent that receives a Delete-Cookie response header MUST delete cookies for the server's registrable domain with corresponding names from its cookie store.
-Each name could match multiple cookies of that same name, set on different paths.
+A user agent that receives a Delete-Cookie response header MUST process it before any Set-Cookie headers received as part of the same response.
+
+When receiving a Delete-Cookie response header, for each string `name` in the List, the user agent MUST do the following:
+
+1) For each cookie in the user agent's cookie store whose name is `name`, and domain domain-matches {{COOKIES}} the canonicalized request-host {{COOKIES}}:
+   1) If the cookie's host-only-flag is true and the cookie's domain is not the canoicalized request-host, continue.
+   1) Delete cookie from the user agent's cookie store.
 
 ## Example
 
