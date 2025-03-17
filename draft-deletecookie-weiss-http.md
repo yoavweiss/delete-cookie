@@ -79,11 +79,32 @@ Each string represents a cookie {{COOKIES}} name to be deleted.
 
 A user agent that receives a Delete-Cookie response header MUST process it before any Set-Cookie headers received as part of the same response.
 
-When receiving a Delete-Cookie response header, for each string `name` in the List, the user agent MUST do the following:
+*Note:* The relevant processing needs to happen before step 15 of the [network fetch](https://fetch.spec.whatwg.org/#http-network-fetch) algorithm.
 
-1) For each cookie in the user agent's cookie store whose name is `name`, and domain domain-matches {{COOKIES}} the canonicalized request-host {{COOKIES}}:
-   1) If the cookie's host-only-flag is true and the cookie's domain is not the canoicalized request-host, continue.
-   1) Delete cookie from the user agent's cookie store.
+When receiving a Delete-Cookie response header, the user agent MUST:
+
+1. If the response was not delivered over a secure channel {{COOKIES}}, return.
+1. Let `host` be the canonicalized response URL's host name.
+1. Let `parsed` be the result of parsing the header's value as a List, as per {{STRUCTURED-FIELDS}}, Section 4.2.1.
+1. If parsing fails, return.
+1. For each `name` in `parsed`:
+   1. If `name` is not a String {{STRUCTURED-FIELDS}}, continue.
+
+        *Note:* The above ignores any parameters in the header's value List.
+
+   1. Let `matching cookies` be the set of cookies from the user agent's cookie store that meet all the following requirements:
+      1. The cookie's name is `name`.
+
+      *Note:* This ensures that cookies with an empty name can be deleted using the empty string. It also ensures that multiple cookies with the same name (and different paths, domains or other attributes) will all be deleted.
+
+      1. Either of the following is true:
+         1. The cookie's host-only-flag is true, and the cookie's domain is identical to host.
+
+           *Note:* The ensures that a server can't delete host-only cookies that aren't destined to its host.
+
+         1. The cookie's host-only-flag is false, and the cookie's domain domain-matches host, as per {{COOKIES}}, Section 5.1.3.
+   1. For each cookie in matching cookies:
+      1. Remove cookie from the user agent's cookie store.
 
 ## Example
 
