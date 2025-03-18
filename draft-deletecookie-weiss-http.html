@@ -21,7 +21,7 @@ without requiring the server to know more details about them.
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
-    Jinja2 3.1.5
+    Jinja2 3.1.6
     lxml 5.3.0
     platformdirs 4.3.6
     pycountry 24.6.1
@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Weiss</td>
-<td class="center">Expires 11 September 2025</td>
+<td class="center">Expires 19 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-deletecookie-weiss-http-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-03-10" class="published">10 March 2025</time>
+<time datetime="2025-03-18" class="published">18 March 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-09-11">11 September 2025</time></dd>
+<dd class="expires"><time datetime="2025-09-19">19 September 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1115,7 +1115,7 @@ without requiring the server to know more details about them.<a href="#section-a
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1220,8 +1220,67 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
       </h2>
 <p id="section-2-1">The Delete-Cookie response header is a Structured Field <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> List of strings.
 Each string represents a cookie <span>[<a href="#COOKIES" class="cite xref">COOKIES</a>]</span> name to be deleted.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">A user agent that receives a Delete-Cookie response header <span class="bcp14">MUST</span> delete cookies for the server's registrable domain with corresponding names from its cookie store.
-Each name could match multiple cookies of that same name, set on different paths.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-2">A user agent that receives a Delete-Cookie response header <span class="bcp14">MUST</span> process it before any Set-Cookie headers received as part of the same response.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3"><em>Note:</em> The relevant processing needs to happen before step 15 of the <a href="https://fetch.spec.whatwg.org/#http-network-fetch">network fetch</a> algorithm.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">When receiving a Delete-Cookie response header, the user agent <span class="bcp14">MUST</span>:<a href="#section-2-4" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2-5">
+<li id="section-2-5.1">
+          <p id="section-2-5.1.1">If the response was not delivered over a "secure" connection (as defined by the user agent) <span>[<a href="#COOKIES" class="cite xref">COOKIES</a>]</span>, return.<a href="#section-2-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-2-5.2">
+          <p id="section-2-5.2.1">Let <code>host</code> be the canonicalized response URL's host name.<a href="#section-2-5.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-2-5.3">
+          <p id="section-2-5.3.1">Let <code>parsed</code> be the result of parsing the header's value as a List, as per <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>, Section 4.2.1.<a href="#section-2-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-2-5.4">
+          <p id="section-2-5.4.1">If parsing fails, return.<a href="#section-2-5.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-2-5.5">
+          <p id="section-2-5.5.1">For each <code>name</code> in <code>parsed</code>:<a href="#section-2-5.5.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2-5.5.2">
+<li id="section-2-5.5.2.1">
+              <p id="section-2-5.5.2.1.1">If <code>name</code> is not a String <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>, continue.<a href="#section-2-5.5.2.1.1" class="pilcrow">¶</a></p>
+<p id="section-2-5.5.2.1.2"><em>Note:</em> The above ignores any parameters in the header's value List.<a href="#section-2-5.5.2.1.2" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-2-5.5.2.2">
+              <p id="section-2-5.5.2.2.1">Let <code>matching cookies</code> be the set of cookies from the user agent's cookie store that meet all the following requirements:<a href="#section-2-5.5.2.2.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2-5.5.2.2.2">
+<li id="section-2-5.5.2.2.2.1">
+                  <p id="section-2-5.5.2.2.2.1.1">The cookie's name is <code>name</code>.<a href="#section-2-5.5.2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              </ol>
+<p id="section-2-5.5.2.2.3">
+<em>Note:</em> This ensures that cookies with an empty name can be deleted using the empty string. It also ensures that multiple cookies with the same name (and different paths, domains or other attributes) will all be deleted.<a href="#section-2-5.5.2.2.3" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2-5.5.2.2.4">
+<li id="section-2-5.5.2.2.4.1">
+                  <p id="section-2-5.5.2.2.4.1.1">Either of the following is true:<a href="#section-2-5.5.2.2.4.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2-5.5.2.2.4.1.2">
+<li id="section-2-5.5.2.2.4.1.2.1">
+                      <p id="section-2-5.5.2.2.4.1.2.1.1">The cookie's host-only-flag is true, and the cookie's domain is identical to host.<a href="#section-2-5.5.2.2.4.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                  </ol>
+<p id="section-2-5.5.2.2.4.1.3">
+<em>Note:</em> The ensures that a server can't delete host-only cookies that aren't destined to its host.<a href="#section-2-5.5.2.2.4.1.3" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2-5.5.2.2.4.1.4">
+<li id="section-2-5.5.2.2.4.1.4.1">
+                      <p id="section-2-5.5.2.2.4.1.4.1.1">The cookie's host-only-flag is false, and the cookie's domain domain-matches host, as per <span>[<a href="#COOKIES" class="cite xref">COOKIES</a>]</span>, Section 5.1.3.<a href="#section-2-5.5.2.2.4.1.4.1.1" class="pilcrow">¶</a></p>
+</li>
+                  </ol>
+</li>
+              </ol>
+</li>
+            <li id="section-2-5.5.2.3">
+              <p id="section-2-5.5.2.3.1">For each cookie in matching cookies:<a href="#section-2-5.5.2.3.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2-5.5.2.3.2">
+<li id="section-2-5.5.2.3.2.1">
+                  <p id="section-2-5.5.2.3.2.1.1">Remove cookie from the user agent's cookie store.<a href="#section-2-5.5.2.3.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              </ol>
+</li>
+          </ol>
+</li>
+      </ol>
 <div id="example">
 <section id="section-2.1">
         <h3 id="name-example">
