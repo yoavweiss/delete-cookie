@@ -83,7 +83,7 @@ A user agent that receives a Delete-Cookie response header MUST process it befor
 
 When receiving a Delete-Cookie response header, the user agent MUST:
 
-1. If the response was not delivered over a secure channel {{COOKIES}}, return.
+1. If the response was not delivered over a "secure" connection (as defined by the user agent) {{COOKIES}}, return.
 1. Let `host` be the canonicalized response URL's host name.
 1. Let `parsed` be the result of parsing the header's value as a List, as per {{STRUCTURED-FIELDS}}, Section 4.2.1.
 1. If parsing fails, return.
