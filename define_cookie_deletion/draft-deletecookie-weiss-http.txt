@@ -4,8 +4,8 @@
 
 Network Working Group                                           Y. Weiss
 Internet-Draft                                                   Shopify
-Intended status: Informational                             17 March 2025
-Expires: 18 September 2025
+Intended status: Informational                             18 March 2025
+Expires: 19 September 2025
 
 
                              Delete-Cookie
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 September 2025.
+   This Internet-Draft will expire on 19 September 2025.
 
 Copyright Notice
 
@@ -121,8 +121,8 @@ Table of Contents
 
    When receiving a Delete-Cookie response header, the user agent MUST:
 
-   1.  If the response was not delivered over a secure channel
-       [COOKIES], return.
+   1.  If the response was not delivered over a "secure" connection (as
+       defined by the user agent) [COOKIES], return.
 
    2.  Let host be the canonicalized response URL's host name.
 
