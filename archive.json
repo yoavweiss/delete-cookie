@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-16T00:33:45.930192+00:00",
+  "timestamp": "2025-03-18T00:30:43.238499+00:00",
   "repo": "yoavweiss/delete-cookie",
   "labels": [
     {
@@ -152,7 +152,7 @@
       "labels": [],
       "body": "The current draft requires that \"A user agent that receives a Delete-Cookie response header MUST delete cookies for the server's registrable domain with corresponding names from its cookie store. Each name could match multiple cookies of that same name, set on different paths.\"\n\nThis is a little unclear about the scope of any deletion, and it might be helpful to specify it a little more clearly. Is the intent to remove all cookies that [domain-match](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#name-domain-matching) the server's host? That is, if `sub.example.com` sends the header, would cookies set on `subsub.sub.example.com` be removed?\n\nIf so, it might be reasonable to special-case `__host-` prefixed cookies, as they are otherwise locked to a host in a way distinct from typical domain-matching. If not, it would be helpful to clarify the scope more precisely. :)",
       "createdAt": "2025-03-11T10:31:11Z",
-      "updatedAt": "2025-03-11T11:50:08Z",
+      "updatedAt": "2025-03-17T08:22:03Z",
       "closedAt": null,
       "comments": [
         {
@@ -168,9 +168,90 @@
           "body": "> > This is a little unclear about the scope of any deletion, and it might be helpful to specify it a little more clearly. Is the intent to remove all cookies that [domain-match](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#name-domain-matching) the server's host? That is, if `sub.example.com` sends the header, would cookies set on `subsub.sub.example.com` be removed?\n> \n> The guiding principle I had in mind is: any cookie that the server can get and set, is one it should be able to delete.\n> \n> So a cookie set in `subsub.sub.example.com` with a `domain=example.com` attribute that covers can be deleted by `sub.example.com` sending a `Delete-Cookie` header.\n\nSo, `sub.example.com` could clear cookies set at `sub.example.com` and `example.com`, but wouldn't clear cookies set at `subsub.sub.example.com`, or host-only cookies (e.g. cookies without a `domain` attribute) set at `example.com`?\n\n> If that makes sense, I can clarify that.\n\nI think it would be helpful to specify the set of cookies this header would act upon for a given response. See step 1 of https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#section-5.8.3 for some example things to consider (prefixes, the `host-only-flag`, the target host, and whether you're acting on exact string matching or domain-matching jump out at me, but there might be other considerations).\n\nIt might also be helpful to specify when this happens in terms of Fetch: does deletion precede or follow processing of the `cookie` header, for example?\n\n",
           "createdAt": "2025-03-11T11:50:07Z",
           "updatedAt": "2025-03-11T11:50:07Z"
+        },
+        {
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "body": "> It might also be helpful to specify when this happens in terms of Fetch: does deletion precede or follow processing of the `cookie` header, for example?\n\nSpecified ([here](https://github.com/yoavweiss/delete-cookie/pull/4), and not really in terms of Fetch) that cookie deletion would happen before `Set-Cookie` is applied.",
+          "createdAt": "2025-03-17T08:22:02Z",
+          "updatedAt": "2025-03-17T08:22:02Z"
         }
       ]
     }
   ],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 4,
+      "id": "PR_kwDON-fYzM6O3y5s",
+      "title": "Better define cookie deletion algorithm",
+      "url": "https://github.com/yoavweiss/delete-cookie/pull/4",
+      "state": "OPEN",
+      "author": "yoavweiss",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "This should address #3 ",
+      "createdAt": "2025-03-17T07:52:07Z",
+      "updatedAt": "2025-03-17T17:31:01Z",
+      "baseRepository": "yoavweiss/delete-cookie",
+      "baseRefName": "main",
+      "baseRefOid": "88bfa1404afd6e160d8482979790f56634b26e01",
+      "headRepository": "yoavweiss/delete-cookie",
+      "headRefName": "define_cookie_deletion",
+      "headRefOid": "76067978a85537af8326c426750608b9f7aa37b5",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDON-fYzM6gU0sq",
+          "commit": {
+            "abbreviatedOid": "3b057e0"
+          },
+          "author": "mikewest",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-17T09:56:21Z",
+          "updatedAt": "2025-03-17T10:51:39Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Precision here will need to wait for 6265tre, I suppose, but you'll want to come up with a way of saying that this happens before step 15 of https://fetch.spec.whatwg.org/#http-network-fetch. You could, for example, just add that as a note here. :)",
+              "createdAt": "2025-03-17T09:56:21Z",
+              "updatedAt": "2025-03-17T10:51:39Z"
+            },
+            {
+              "originalPosition": 12,
+              "body": "I'd expect something kinda like the following rough sketch:\r\n\r\n> When a user agent receives a response containing a `Delete-Cookie` header field, the user agent MUST:\r\n>\r\n> 1.  Let `host` be the canonicalized host name of the response's URL. \r\n> 1.  Let `parsed` be the result of parsing the header's value as a List, as per {{RFC8941}}, Section 4.2.1.\r\n> 1.  If parsing fails, return without touching the cookie store.\r\n> 1.  For each `name` in `parsed`:\r\n>     1.  ISSUE: What do you want to do if the item's type isn't String? Skip it and continue to the next? Fail parsing? Crash the browser?\r\n>     1.  ISSUE: What do you want to do with parameters? Ignore them?\r\n>     1.  Let `matching cookies` be the set of cookies from the user agent's cookie store that meet all the following requirements:\r\n>         *   The cookie's `name` is `name`.\r\n>         *   Either of the following is `true`:\r\n>             *   The cookie's `host-only-flag` is `true`, and the cookie's `domain` is identical to `host`.\r\n>             *   The cookie's `host-only-flag` is `false`, and the cookie's `domain` domain-matches `host`, as per {{COOKIES}}, Section 5.1.3.\r\n>     1.  For each `cookie` in `matching cookies`:\r\n>         1.  Remove `cookie` from the user agent's cookie store.\r\n\r\nSome other thoughts:\r\n\r\n* Do you want to accept `Delete-Cookie` headers over non-secure connections? I'd suggest that you'd ideally punt out of the algorithm above for plaintext connections. If you have reason not to do that, add something about the `secure-only-flag` in the matching requirements to sure that non-secure sites can't remove secure site's cookies.\r\n* It might be helpful to note somewhere that cookies with empty names can be removed via empty string (e.g. `Delete-Cookie: \"\"`).\r\n* Likewise, adding a note in prose about the scoping, the impact of `__Host-`, etc. would be helpful, as not everyone reading this will think in algorithms.\r\n* Also, noting that this should remove all cookies with a given name, regardless of path or domain shadowing (or any other flag: httponly, expiration, etc), could remove ambiguity.",
+              "createdAt": "2025-03-17T10:51:31Z",
+              "updatedAt": "2025-03-17T10:51:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDON-fYzM6gbNU5",
+          "commit": {
+            "abbreviatedOid": "3b057e0"
+          },
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-17T17:31:01Z",
+          "updatedAt": "2025-03-17T17:31:01Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "Thanks!! Revamped!",
+              "createdAt": "2025-03-17T17:31:01Z",
+              "updatedAt": "2025-03-17T17:31:01Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
