@@ -4,8 +4,8 @@
 
 Network Working Group                                           Y. Weiss
 Internet-Draft                                                   Shopify
-Intended status: Informational                             10 March 2025
-Expires: 11 September 2025
+Intended status: Informational                             20 March 2025
+Expires: 21 September 2025
 
 
                              Delete-Cookie
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 September 2025.
+   This Internet-Draft will expire on 21 September 2025.
 
 Copyright Notice
 
@@ -112,9 +112,58 @@ Table of Contents
    [COOKIES] name to be deleted.
 
    A user agent that receives a Delete-Cookie response header MUST
-   delete cookies for the server's registrable domain with corresponding
-   names from its cookie store.  Each name could match multiple cookies
-   of that same name, set on different paths.
+   process it before any Set-Cookie headers received as part of the same
+   response.
+
+   _Note:_ The relevant processing needs to happen before step 15 of the
+   network fetch (https://fetch.spec.whatwg.org/#http-network-fetch)
+   algorithm.
+
+   When receiving a Delete-Cookie response header, the user agent MUST:
+
+   1.  If the response was not delivered over a "secure" connection (as
+       defined by the user agent) [COOKIES], return.
+
+   2.  Let host be the canonicalized response URL's host name.
+
+   3.  Let parsed be the result of parsing the header's value as a List,
+       as per [STRUCTURED-FIELDS], Section 4.2.1.
+
+   4.  If parsing fails, return.
+
+   5.  For each name in parsed:
+
+       1.  If name is not a String [STRUCTURED-FIELDS], continue.
+
+           _Note:_ The above ignores any parameters in the header's
+           value List.
+
+       2.  Let matching cookies be the set of cookies from the user
+           agent's cookie store that meet all the following
+           requirements:
+
+           1.  The cookie's name is name.
+
+           _Note:_ This ensures that cookies with an empty name can be
+           deleted using the empty string.  It also ensures that
+           multiple cookies with the same name (and different paths,
+           domains or other attributes) will all be deleted.
+
+           1.  Either of the following is true:
+
+               1.  The cookie's host-only-flag is true, and the cookie's
+                   domain is identical to host.
+
+               _Note:_ The ensures that a server can't delete host-only
+               cookies that aren't destined to its host.
+
+               1.  The cookie's host-only-flag is false, and the
+                   cookie's domain domain-matches host, as per
+                   [COOKIES], Section 5.1.3.
+
+       3.  For each cookie in matching cookies:
+
+           1.  Remove cookie from the user agent's cookie store.
 
 2.1.  Example
 
