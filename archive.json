@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-18T00:30:43.238499+00:00",
+  "timestamp": "2025-03-20T00:30:27.516571+00:00",
   "repo": "yoavweiss/delete-cookie",
   "labels": [
     {
@@ -147,7 +147,7 @@
       "url": "https://github.com/yoavweiss/delete-cookie/issues/3",
       "state": "OPEN",
       "author": "mikewest",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The current draft requires that \"A user agent that receives a Delete-Cookie response header MUST delete cookies for the server's registrable domain with corresponding names from its cookie store. Each name could match multiple cookies of that same name, set on different paths.\"\n\nThis is a little unclear about the scope of any deletion, and it might be helpful to specify it a little more clearly. Is the intent to remove all cookies that [domain-match](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#name-domain-matching) the server's host? That is, if `sub.example.com` sends the header, would cookies set on `subsub.sub.example.com` be removed?\n\nIf so, it might be reasonable to special-case `__host-` prefixed cookies, as they are otherwise locked to a host in a way distinct from typical domain-matching. If not, it would be helpful to clarify the scope more precisely. :)",
@@ -164,7 +164,7 @@
         },
         {
           "author": "mikewest",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "> > This is a little unclear about the scope of any deletion, and it might be helpful to specify it a little more clearly. Is the intent to remove all cookies that [domain-match](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#name-domain-matching) the server's host? That is, if `sub.example.com` sends the header, would cookies set on `subsub.sub.example.com` be removed?\n> \n> The guiding principle I had in mind is: any cookie that the server can get and set, is one it should be able to delete.\n> \n> So a cookie set in `subsub.sub.example.com` with a `domain=example.com` attribute that covers can be deleted by `sub.example.com` sending a `Delete-Cookie` header.\n\nSo, `sub.example.com` could clear cookies set at `sub.example.com` and `example.com`, but wouldn't clear cookies set at `subsub.sub.example.com`, or host-only cookies (e.g. cookies without a `domain` attribute) set at `example.com`?\n\n> If that makes sense, I can clarify that.\n\nI think it would be helpful to specify the set of cookies this header would act upon for a given response. See step 1 of https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#section-5.8.3 for some example things to consider (prefixes, the `host-only-flag`, the target host, and whether you're acting on exact string matching or domain-matching jump out at me, but there might be other considerations).\n\nIt might also be helpful to specify when this happens in terms of Fetch: does deletion precede or follow processing of the `cookie` header, for example?\n\n",
           "createdAt": "2025-03-11T11:50:07Z",
           "updatedAt": "2025-03-11T11:50:07Z"
@@ -177,6 +177,22 @@
           "updatedAt": "2025-03-17T08:22:02Z"
         }
       ]
+    },
+    {
+      "number": 5,
+      "id": "I_kwDON-fYzM6umX_C",
+      "title": "Add an examples section!",
+      "url": "https://github.com/yoavweiss/delete-cookie/issues/5",
+      "state": "OPEN",
+      "author": "yoavweiss",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-03-18T17:27:40Z",
+      "updatedAt": "2025-03-18T17:27:40Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -185,24 +201,26 @@
       "id": "PR_kwDON-fYzM6O3y5s",
       "title": "Better define cookie deletion algorithm",
       "url": "https://github.com/yoavweiss/delete-cookie/pull/4",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yoavweiss",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "This should address #3 ",
       "createdAt": "2025-03-17T07:52:07Z",
-      "updatedAt": "2025-03-17T17:31:01Z",
+      "updatedAt": "2025-03-18T17:27:25Z",
       "baseRepository": "yoavweiss/delete-cookie",
       "baseRefName": "main",
       "baseRefOid": "88bfa1404afd6e160d8482979790f56634b26e01",
       "headRepository": "yoavweiss/delete-cookie",
       "headRefName": "define_cookie_deletion",
-      "headRefOid": "76067978a85537af8326c426750608b9f7aa37b5",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "2503fa1b36d29d60bc52267ea4b263516ec0ed85",
+      "closedAt": "2025-03-18T17:27:25Z",
+      "mergedAt": "2025-03-18T17:27:25Z",
+      "mergedBy": "yoavweiss",
+      "mergeCommit": {
+        "oid": "feeed8677839e4a48af52067136dd52789c1f44b"
+      },
       "comments": [],
       "reviews": [
         {
@@ -211,7 +229,7 @@
             "abbreviatedOid": "3b057e0"
           },
           "author": "mikewest",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-03-17T09:56:21Z",
@@ -248,6 +266,84 @@
               "body": "Thanks!! Revamped!",
               "createdAt": "2025-03-17T17:31:01Z",
               "updatedAt": "2025-03-17T17:31:01Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDON-fYzM6gin6E",
+          "commit": {
+            "abbreviatedOid": "7606797"
+          },
+          "author": "mikewest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-03-18T08:21:40Z",
+          "updatedAt": "2025-03-18T08:29:08Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "Nit: To match the language in rfc6265:\r\n\r\n```suggestion\r\n1. If the response was not delivered over a \"secure\" connection (as defined by the user agent) {{COOKIES}}, return.\r\n```",
+              "createdAt": "2025-03-18T08:21:41Z",
+              "updatedAt": "2025-03-18T08:29:08Z"
+            },
+            {
+              "originalPosition": 12,
+              "body": "Nit: To match the language in rfc6265:\r\n\r\n```suggestion\r\n1. If the response was not delivered over a \"secure\" connection (as defined by the user agent) {{COOKIES}}, return.\r\n```",
+              "createdAt": "2025-03-18T08:25:13Z",
+              "updatedAt": "2025-03-18T08:29:08Z"
+            },
+            {
+              "originalPosition": 19,
+              "body": "Nit: I feel like the spacing of all the notes in this section is somewhat inconsistent. Have you checked the output?",
+              "createdAt": "2025-03-18T08:25:50Z",
+              "updatedAt": "2025-03-18T08:29:08Z"
+            },
+            {
+              "originalPosition": 24,
+              "body": "I'd suggest putting this into a example section in the intro or something rather than a note here, but I certainly wouldn't block on that.",
+              "createdAt": "2025-03-18T08:26:48Z",
+              "updatedAt": "2025-03-18T08:29:08Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDON-fYzM6gqrcQ",
+          "commit": {
+            "abbreviatedOid": "7606797"
+          },
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-18T17:26:48Z",
+          "updatedAt": "2025-03-18T17:26:48Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "Yeah. They *seem* fine..",
+              "createdAt": "2025-03-18T17:26:48Z",
+              "updatedAt": "2025-03-18T17:26:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDON-fYzM6gqrxL",
+          "commit": {
+            "abbreviatedOid": "7606797"
+          },
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-18T17:27:18Z",
+          "updatedAt": "2025-03-18T17:27:18Z",
+          "comments": [
+            {
+              "originalPosition": 24,
+              "body": "Thanks! I think I can add an example section as a followup",
+              "createdAt": "2025-03-18T17:27:18Z",
+              "updatedAt": "2025-03-18T17:27:18Z"
             }
           ]
         }
