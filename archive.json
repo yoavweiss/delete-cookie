@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-20T00:30:27.516571+00:00",
+  "timestamp": "2025-03-23T00:33:58.673461+00:00",
   "repo": "yoavweiss/delete-cookie",
   "labels": [
     {
@@ -86,7 +86,7 @@
       "labels": [],
       "body": "I wonder if the intro should be extended to include `partitioned` attribute? That's another one we've seen confusion with as sites migrate from non-partitioned to partitioned cookies.\n\nSee also: https://developers.google.com/privacy-sandbox/cookies/chips-transition",
       "createdAt": "2025-02-24T08:58:31Z",
-      "updatedAt": "2025-02-25T19:28:15Z",
+      "updatedAt": "2025-03-21T05:59:24Z",
       "closedAt": null,
       "comments": [
         {
@@ -137,6 +137,20 @@
           "body": "> I was looking to where `partitioned` is defined and found https://datatracker.ietf.org/doc/draft-cutler-httpbis-partitioned-cookies/ which seems to have expired. Are there plans to bring `partitioned` to a standards venue?\n\nYes, that's one thing our [proposed 6265bis successor](https://github.com/johannhof/draft-annevk-johannhof-httpbis-cookies) is intended to bring to the Cookies spec (it actually doesn't mention partitioned cookies right now but that's being worked on by @dcthetall).\n\n> Yes, @tunetheweb is right, the server would need to know to add the Partitioned attribute to delete the cookie correctly.\n\n+1 on that requirement, though I'll read this proposal in more detail before I can comment on what the implications on it are :)",
           "createdAt": "2025-02-25T19:28:14Z",
           "updatedAt": "2025-02-25T19:28:14Z"
+        },
+        {
+          "author": "johannhof",
+          "authorAssociation": "NONE",
+          "body": "A few more thoughts on this:\n\n- We should support clearing partitioned cookies if the response is made in the right context\n- For Privacy reasons, we should absolutely not support deleting partitioned and/or unpartitioned cookies from contexts that don't otherwise have access to them, see https://github.com/privacycg/storage-partitioning/issues/11\n- So, in order to properly clear partitioned cookies, this specification would have to receive a partition key from the request. \n- Then, we need to compare the request's partition key with the cookie's partition key and only delete those that match, if the cookie is partitioned.\n- It should also receive information on whether the request is made in an unpartitioned context, to (dis)allow clearing unpartitioned cookies.\n- Integration with the cookie layering work ongoing in Fetch should make it trivial for you to get these values :)\n- If the current context has both a partitioned cookie and an unpartitioned cookie with the same name (this happens with 1P partitioned cookies or storage access), it's probably easiest to just clear both.\n\nIn practice this means developers will not need to know the `Partitioned` attribute to use this API, which seems like a benefit to me. The API should automatically clear only those cookies that the request has access to in that specific moment. Headers like [SAH](https://github.com/privacycg/storage-access-headers) and [FAH](https://github.com/explainers-by-googlers/frame-ancestor-headers) can help developers understand the context that they're in.\n\nCC @annevk",
+          "createdAt": "2025-03-21T05:54:50Z",
+          "updatedAt": "2025-03-21T05:54:50Z"
+        },
+        {
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "body": "> In practice this means developers will not need to know the `Partitioned` attribute to use this API, which seems like a benefit to me. The API should automatically clear only those cookies that the request has access to in that specific moment.\n\nI agree that this is the right approach. Developers should not worry about this, and the processing model would ensure that \"if you can't get the cookie, you can't clear the cookie\" mental model still works.\n\n\n\n> * Integration with the cookie layering work ongoing in Fetch should make it trivial for you to get these values :)\n\nLooking forward to that! :)",
+          "createdAt": "2025-03-21T05:59:23Z",
+          "updatedAt": "2025-03-21T05:59:23Z"
         }
       ]
     },
@@ -145,15 +159,15 @@
       "id": "I_kwDON-fYzM6tcwVJ",
       "title": "Scope of deletion.",
       "url": "https://github.com/yoavweiss/delete-cookie/issues/3",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mikewest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The current draft requires that \"A user agent that receives a Delete-Cookie response header MUST delete cookies for the server's registrable domain with corresponding names from its cookie store. Each name could match multiple cookies of that same name, set on different paths.\"\n\nThis is a little unclear about the scope of any deletion, and it might be helpful to specify it a little more clearly. Is the intent to remove all cookies that [domain-match](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis#name-domain-matching) the server's host? That is, if `sub.example.com` sends the header, would cookies set on `subsub.sub.example.com` be removed?\n\nIf so, it might be reasonable to special-case `__host-` prefixed cookies, as they are otherwise locked to a host in a way distinct from typical domain-matching. If not, it would be helpful to clarify the scope more precisely. :)",
       "createdAt": "2025-03-11T10:31:11Z",
-      "updatedAt": "2025-03-17T08:22:03Z",
-      "closedAt": null,
+      "updatedAt": "2025-03-21T06:19:47Z",
+      "closedAt": "2025-03-21T06:19:45Z",
       "comments": [
         {
           "author": "yoavweiss",
@@ -175,6 +189,13 @@
           "body": "> It might also be helpful to specify when this happens in terms of Fetch: does deletion precede or follow processing of the `cookie` header, for example?\n\nSpecified ([here](https://github.com/yoavweiss/delete-cookie/pull/4), and not really in terms of Fetch) that cookie deletion would happen before `Set-Cookie` is applied.",
           "createdAt": "2025-03-17T08:22:02Z",
           "updatedAt": "2025-03-17T08:22:02Z"
+        },
+        {
+          "author": "yoavweiss",
+          "authorAssociation": "OWNER",
+          "body": "Closed by #4 ",
+          "createdAt": "2025-03-21T06:19:46Z",
+          "updatedAt": "2025-03-21T06:19:46Z"
         }
       ]
     },
